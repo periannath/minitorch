@@ -42,7 +42,7 @@ def eq(x: float, y: float) -> float:
 
 def max(x: float, y: float) -> float:
     "$f(x) =$ x if x is greater than y else y"
-    return max(x, y)
+    return x if x > y else y
 
 
 def is_close(x: float, y: float) -> float:
