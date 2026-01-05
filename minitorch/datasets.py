@@ -21,6 +21,7 @@ class Graph:
 
 
 def simple(N: int) -> Graph:
+    """Mark left half of elements as 1"""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -30,6 +31,7 @@ def simple(N: int) -> Graph:
 
 
 def diag(N: int) -> Graph:
+    """Mark elements closer to the (0,0) as 1"""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -39,6 +41,7 @@ def diag(N: int) -> Graph:
 
 
 def split(N: int) -> Graph:
+    """Mark small values in x-axis and large value in x-axis as 1"""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -48,6 +51,7 @@ def split(N: int) -> Graph:
 
 
 def xor(N: int) -> Graph:
+    """XOR"""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -57,6 +61,11 @@ def xor(N: int) -> Graph:
 
 
 def circle(N: int) -> Graph:
+    """
+    Mark elements inside circle as 0.
+    - Center: (0.5, 0.5)
+    - Radius: 0.1
+    """
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -67,6 +76,8 @@ def circle(N: int) -> Graph:
 
 
 def spiral(N: int) -> Graph:
+    """Spiral!"""
+
     def x(t: float) -> float:
         return t * math.cos(t) / 20.0
 
