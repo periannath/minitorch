@@ -89,7 +89,7 @@ def exp(x: float) -> float:
 
 def log_back(x: float, d: float) -> float:
     r"If $f = log$ as above, compute $d \times f'(x)$"
-    return d / x
+    return d / (x + EPS)
 
 
 def inv(x: float) -> float:
