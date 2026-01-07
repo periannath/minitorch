@@ -16,6 +16,7 @@ MAX_DIMS = 32
 
 class IndexingError(RuntimeError):
     "Exception raised for indexing errors."
+
     pass
 
 
@@ -42,9 +43,10 @@ def index_to_position(index: Index, strides: Strides) -> int:
     Returns:
         Position in storage
     """
-
-    # TODO: Implement for Task 2.1.
-    raise NotImplementedError('Need to implement for Task 2.1')
+    pos = 0
+    for i, s in zip(index, strides):
+        pos += i * s
+    return pos
 
 
 def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
@@ -60,8 +62,9 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
         out_index : return index corresponding to position.
 
     """
-    # TODO: Implement for Task 2.1.
-    raise NotImplementedError('Need to implement for Task 2.1')
+    for i, dim in enumerate(reversed(shape)):
+        out_index[-1 - i] = ordinal % dim
+        ordinal /= dim
 
 
 def broadcast_index(
@@ -84,7 +87,7 @@ def broadcast_index(
         None
     """
     # TODO: Implement for Task 2.2.
-    raise NotImplementedError('Need to implement for Task 2.2')
+    raise NotImplementedError("Need to implement for Task 2.2")
 
 
 def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
@@ -102,7 +105,7 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
         IndexingError : if cannot broadcast
     """
     # TODO: Implement for Task 2.2.
-    raise NotImplementedError('Need to implement for Task 2.2')
+    raise NotImplementedError("Need to implement for Task 2.2")
 
 
 def strides_from_shape(shape: UserShape) -> UserStrides:
@@ -223,33 +226,42 @@ class TensorData:
         Returns:
             New `TensorData` with the same storage and a new dimension order.
         """
-        assert list(sorted(order)) == list(
-            range(len(self.shape))
-        ), f"Must give a position to each dimension. Shape: {self.shape} Order: {order}"
+        assert list(sorted(order)) == list(range(len(self.shape))), (
+            f"Must give a position to each dimension. Shape: {self.shape} Order: {order}"
+        )
+        new_shape = [0] * len(self.shape)
+        new_stride = [0] * len(self.strides)
 
-        # TODO: Implement for Task 2.1.
-        raise NotImplementedError('Need to implement for Task 2.1')
+        for i, v in enumerate(order):
+            new_shape[i] = self.shape[v]
+            new_stride[i] = self.strides[v]
+
+        shape_tuple = tuple(new_shape)
+        stride_tuple = tuple(new_stride)
+
+        data = TensorData(self._storage, shape_tuple, stride_tuple)
+        return data
 
     def to_string(self) -> str:
         s = ""
         for index in self.indices():
-            l = ""
+            line = ""
             for i in range(len(index) - 1, -1, -1):
                 if index[i] == 0:
-                    l = "\n%s[" % ("\t" * i) + l
+                    line = "\n%s[" % ("\t" * i) + line
                 else:
                     break
-            s += l
+            s += line
             v = self.get(index)
             s += f"{v:3.2f}"
-            l = ""
+            line = ""
             for i in range(len(index) - 1, -1, -1):
                 if index[i] == self.shape[i] - 1:
-                    l += "]"
+                    line += "]"
                 else:
                     break
-            if l:
-                s += l
+            if line:
+                s += line
             else:
                 s += " "
         return s
