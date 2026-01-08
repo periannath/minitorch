@@ -65,12 +65,11 @@ def render_math_sandbox(use_scalar=False, use_tensor=False):
             st.graphviz_chart(nx.nx_pydot.to_pydot(G).to_string())
 
     if f_type == "Two Arg":
-
         st.write("### " + name)
         render_function(scalar)
         st.write("Function f(x, y)")
-        xs = [((x / 1.0) - 50.0 + 1e-5) for x in range(1, 100)]
-        ys = [((x / 1.0) - 50.0 + 1e-5) for x in range(1, 100)]
+        xs = [((x / 2.0) - 50.0 + 1e-5) for x in range(1, 200)]
+        ys = [((x / 2.0) - 50.0 + 1e-5) for x in range(1, 200)]
         if use_scalar:
             if use_tensor:
                 zs = [
@@ -103,8 +102,8 @@ def render_math_sandbox(use_scalar=False, use_tensor=False):
                         y1 = minitorch.tensor([y])
                         out = scalar(x1, y1)
                         out.backward(minitorch.tensor([1]))
-                        oa.append((x, y, x1.derivative[0]))
-                        ob.append((x, y, y1.derivative[0]))
+                        oa.append((x, y, x1.grad[0]))
+                        ob.append((x, y, y1.grad[0]))
                 else:
                     for y in ys:
                         x1 = minitorch.Scalar(x)
