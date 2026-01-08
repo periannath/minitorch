@@ -20,9 +20,30 @@ def test_create(t1: List[float]) -> None:
         assert t1[i] == t2[i]
 
 
+def id_one_arg(
+    fn: Tuple[str, Callable[[float], float], Callable[[Tensor], Tensor]],
+) -> str:
+    name, _, _ = fn
+    return name
+
+
+def id_two_arg(
+    fn: Tuple[str, Callable[[float, float], float], Callable[[Tensor, Tensor], Tensor]],
+) -> str:
+    name, _, _ = fn
+    return name
+
+
+def id_red_arg(
+    fn: Tuple[str, Callable[[Iterable[float]], float], Callable[[Tensor], Tensor]],
+) -> str:
+    name, _, _ = fn
+    return name
+
+
 @given(tensors())
 @pytest.mark.task2_3
-@pytest.mark.parametrize("fn", one_arg)
+@pytest.mark.parametrize("fn", one_arg, ids=id_one_arg)
 def test_one_args(
     fn: Tuple[str, Callable[[float], float], Callable[[Tensor], Tensor]], t1: Tensor
 ) -> None:
@@ -35,7 +56,7 @@ def test_one_args(
 
 @given(shaped_tensors(2))
 @pytest.mark.task2_3
-@pytest.mark.parametrize("fn", two_arg)
+@pytest.mark.parametrize("fn", two_arg, ids=id_two_arg)
 def test_two_args(
     fn: Tuple[str, Callable[[float, float], float], Callable[[Tensor, Tensor], Tensor]],
     ts: Tuple[Tensor, Tensor],
@@ -49,7 +70,7 @@ def test_two_args(
 
 @given(tensors())
 @pytest.mark.task2_4
-@pytest.mark.parametrize("fn", one_arg)
+@pytest.mark.parametrize("fn", one_arg, ids=id_one_arg)
 def test_one_derivative(
     fn: Tuple[str, Callable[[float], float], Callable[[Tensor], Tensor]], t1: Tensor
 ) -> None:
@@ -87,7 +108,7 @@ def test_grad_size() -> None:
 
 @given(tensors())
 @pytest.mark.task2_4
-@pytest.mark.parametrize("fn", red_arg)
+@pytest.mark.parametrize("fn", red_arg, ids=id_red_arg)
 def test_grad_reduce(
     fn: Tuple[str, Callable[[Iterable[float]], float], Callable[[Tensor], Tensor]],
     t1: Tensor,
@@ -99,7 +120,7 @@ def test_grad_reduce(
 
 @given(shaped_tensors(2))
 @pytest.mark.task2_4
-@pytest.mark.parametrize("fn", two_arg)
+@pytest.mark.parametrize("fn", two_arg, ids=id_two_arg)
 def test_two_grad(
     fn: Tuple[str, Callable[[float, float], float], Callable[[Tensor, Tensor], Tensor]],
     ts: Tuple[Tensor, Tensor],
@@ -111,7 +132,7 @@ def test_two_grad(
 
 @given(shaped_tensors(2))
 @pytest.mark.task2_4
-@pytest.mark.parametrize("fn", two_arg)
+@pytest.mark.parametrize("fn", two_arg, ids=id_two_arg)
 def test_two_grad_broadcast(
     fn: Tuple[str, Callable[[float, float], float], Callable[[Tensor, Tensor], Tensor]],
     ts: Tuple[Tensor, Tensor],
