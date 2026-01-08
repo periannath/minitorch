@@ -62,10 +62,9 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
         out_index : return index corresponding to position.
 
     """
-    strides = strides_from_shape(tuple(shape))
-    for i, dim in enumerate(strides):
-        out_index[i] = int(ordinal / dim)
-        ordinal = ordinal % dim
+    for i, dim in enumerate(reversed(shape)):
+        out_index[-1 - i] = ordinal % dim
+        ordinal = int(ordinal / dim)
 
 
 def broadcast_index(
