@@ -38,6 +38,27 @@ if numba.cuda.is_available():
     shared["cuda"] = minitorch.TensorBackend(minitorch.CudaOps)
 
 
+def id_one_arg(
+    fn: Tuple[str, Callable[[float], float], Callable[[Tensor], Tensor]],
+) -> str:
+    name, _, _ = fn
+    return name
+
+
+def id_two_arg(
+    fn: Tuple[str, Callable[[float, float], float], Callable[[Tensor, Tensor], Tensor]],
+) -> str:
+    name, _, _ = fn
+    return name
+
+
+def id_red_arg(
+    fn: Tuple[str, Callable[[Iterable[float]], float], Callable[[Tensor], Tensor]],
+) -> str:
+    name, _, _ = fn
+    return name
+
+
 # ## Task 3.1 and 3.3
 
 
@@ -52,7 +73,7 @@ def test_create(backend: str, t1: List[float]) -> None:
 
 @given(data())
 @settings(max_examples=100)
-@pytest.mark.parametrize("fn", one_arg)
+@pytest.mark.parametrize("fn", one_arg, ids=id_one_arg)
 @pytest.mark.parametrize("backend", backend_tests)
 def test_one_args(
     fn: Tuple[str, Callable[[float], float], Callable[[Tensor], Tensor]],
@@ -69,7 +90,7 @@ def test_one_args(
 
 @given(data())
 @settings(max_examples=100)
-@pytest.mark.parametrize("fn", two_arg)
+@pytest.mark.parametrize("fn", two_arg, ids=id_two_arg)
 @pytest.mark.parametrize("backend", backend_tests)
 def test_two_args(
     fn: Tuple[str, Callable[[float, float], float], Callable[[Tensor, Tensor], Tensor]],
@@ -85,7 +106,7 @@ def test_two_args(
 
 
 @given(data())
-@pytest.mark.parametrize("fn", one_arg)
+@pytest.mark.parametrize("fn", one_arg, ids=id_one_arg)
 @pytest.mark.parametrize("backend", backend_tests)
 def test_one_derivative(
     fn: Tuple[str, Callable[[float], float], Callable[[Tensor], Tensor]],
@@ -100,7 +121,7 @@ def test_one_derivative(
 
 @given(data())
 @settings(max_examples=50)
-@pytest.mark.parametrize("fn", two_arg)
+@pytest.mark.parametrize("fn", two_arg, ids=id_two_arg)
 @pytest.mark.parametrize("backend", backend_tests)
 def test_two_grad(
     fn: Tuple[str, Callable[[float, float], float], Callable[[Tensor, Tensor], Tensor]],
@@ -115,7 +136,7 @@ def test_two_grad(
 
 @given(data())
 @settings(max_examples=100)
-@pytest.mark.parametrize("fn", red_arg)
+@pytest.mark.parametrize("fn", red_arg, ids=id_red_arg)
 @pytest.mark.parametrize("backend", backend_tests)
 def test_reduce(
     fn: Tuple[str, Callable[[Iterable[float]], float], Callable[[Tensor], Tensor]],

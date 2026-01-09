@@ -62,8 +62,9 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
         out_index : return index corresponding to position.
 
     """
-    for i, dim in enumerate(reversed(shape)):
-        out_index[-1 - i] = ordinal % dim
+    for i in range(len(shape) - 1, -1, -1):
+        dim = shape[i]
+        out_index[i] = ordinal % dim
         ordinal = int(ordinal / dim)
 
 

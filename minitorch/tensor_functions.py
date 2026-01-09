@@ -160,6 +160,7 @@ class Sum(Function):
     @staticmethod
     def forward(ctx: Context, a: Tensor, dim: Tensor) -> Tensor:
         ctx.save_for_backward(a.shape, dim)
+        print(f"a:{a}, dim:{dim}")
         return a.f.add_reduce(a, int(dim.item()))
 
     @staticmethod
@@ -375,8 +376,8 @@ def tensor(
 def grad_central_difference(
     f: Any, *vals: Tensor, arg: int = 0, epsilon: float = 1e-6, ind: UserIndex
 ) -> float:
-    x = vals[arg]
-    up = zeros(x.shape)
+    target = vals[arg]
+    up = zeros(target.shape)
     up[ind] = epsilon
     vals1 = [x if j != arg else x + up for j, x in enumerate(vals)]
     vals2 = [x if j != arg else x - up for j, x in enumerate(vals)]
